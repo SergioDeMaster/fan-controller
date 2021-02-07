@@ -1,0 +1,68 @@
+esphome:
+  name: fan-controller
+  platform: ESP8266
+  board: nodemcuv2
+
+wifi:
+  ssid: !secret wifi_home_ssid_name
+  password: !secret wifi_home_ssid_pass
+  manual_ip:
+    static_ip: 192.168.1.41
+    subnet: 255.255.255.0
+    gateway: 192.16.1.1
+    
+  fast_connect: true
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Fan-Controller Fallback Hotspot"
+    password: !secret fallback_password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  password: !secret ota_password
+  
+
+binary_sensor:
+  - platform: status
+    name: "fan-control"
+
+  - platform: gpio
+    id: btn_hw_bathroom
+    pin:
+      number: GPIO5 #D1
+      inverted: false
+    on_press:
+      then:
+        - switch.turn_on: relay_bathroom
+  
+  - platform: gpio
+    id: btn_hw_toilet
+    pin:
+      number: GPIO4 #D2
+      inverted: false
+    on_press:
+      then:
+        - switch.turn_on: relay_toilet
+  
+  #- platform: homeassistant
+  
+  
+switch:      
+  - platform: gpio
+    pin: D6
+    id: relay_bathroom
+    inverted: yes
+
+  - platform: gpio
+    pin: D7
+    id: relay_toilet
+    inverted: yes
