@@ -60,9 +60,23 @@ switch:
   - platform: gpio
     pin: D6
     id: relay_bathroom
-    inverted: yes
+    on_turn_on:
+      - switch.turn_on: relay_bathroom 
+      - switch.turn_off: relay_toilet
+      - delay: 30min
+      - switch.turn_off: relay_bathroom
+    on_turn_off:
+      - switch.turn_off: relay_bathroom
+#    inverted: yes
 
   - platform: gpio
     pin: D7
     id: relay_toilet
-    inverted: yes
+    on_turn_on:
+      - switch.turn_on: relay_toilet
+      - switch.turn_off: relay_bathroom 
+      - delay: 5min
+      - switch.turn_off: relay_toilet
+    on_turn_off:
+      - switch.turn_off: relay_toilet
+#    inverted: yes
